@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "322978140955",
+    "firebase_url": "https://nik-nak-ebb71.firebaseio.com",
+    "project_id": "nik-nak-ebb71",
+    "storage_bucket": "nik-nak-ebb71.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:322978140955:android:edde856fea03fa17fbb9be",
+        "android_client_info": {
+          "package_name": "com.example.nik_nak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "322978140955-4cno2b6uggv0o2gtk7hkkd3tl44mpudg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8wyLN7McS8A6xaiK9npLzU4uZs7ysHfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "322978140955-4cno2b6uggv0o2gtk7hkkd3tl44mpudg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

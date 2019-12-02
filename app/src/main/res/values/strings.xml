@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">nik-nak</string>
+    <string name="title_activity_posts">PostsActivity</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_peak">Peak</string>
+    <string name="title_me">Me</string>
+    <string name="title_more">More</string>
+
+    <string name="hello_niknak">Hello NikNak!</string>
+    <string name="peak_near_header">Peak Near</string>
+
+    <string name="permission_logo">Location Permission</string>
+    <string name="permission_description">This application uses location to show posts in your area. To do that you will need to give us permission to use your location.</string>
+
+    <string name="permission_btn">Continue</string>
+
+    <string name="new_post_header">New Post</string>
+    <string name="new_post_create">Send</string>
+
+    <string name="new_reply_create">Reply</string>
+
+    <string name="home_fragment_title">THIS IS HOME FRAGMENT</string>
+    <string name="peak_fragment_title">THIS IS PEAK FRAGMENT</string>
+    <string name="me_fragment_title">THIS IS ME FRAGMENT</string>
+    <string name="more_fragment_title">Profile Settings</string>
+
+    <string name="more_fragment_private">Private status</string>
+    <string name="more_fragment_gender">Gender</string>
+    <string name="more_fragment_age_range">Age Range</string>
+
+    <string name="user_id_key">nik_nik_u_id</string>
+    <string name="user_points_key">nik_nik_u_points</string>
+
+    <string name="top_menu_title_points">0</string>
+    <string name="user_point_title">Yakarma Description</string>
+    <string name="user_point_yak">Yaks</string>
+    <string name="user_point_engage">Engage</string>
+    <string name="like_button_desc">Like button</string>
+    <string name="dislike_button_desc">Dislike Button</string>
+</resources>
