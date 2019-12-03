@@ -82,7 +82,6 @@ class HomeFragment : Fragment() {
                 for (document in result) {
                     // Log.d(TAG, "${document.id} => ${document.data}")
                     postTitleList.add(document.data["data"].toString())
-                    // postPointsList.add(document.data["points"].toString())
                     postPointsList.add(document.data["points"].toString())
                     postIdList.add(document.id)
                 }
