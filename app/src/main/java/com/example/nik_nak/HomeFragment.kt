@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 class HomeFragment : Fragment() {
 
     private val TAG = "Home Fragment"
+    private var TYPE = "createdAt"
 
     private var postTitleList = ArrayList<String>()
     private var postPointsList = ArrayList<String>()
@@ -44,7 +45,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val context = context as MainActivity
         val refreshLayout = context.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
         refreshLayout.setOnRefreshListener{
@@ -58,6 +58,15 @@ class HomeFragment : Fragment() {
 
         Log.i(TAG, "onViewCreated")
 
+        arguments?.let {
+            val type = it.getString("type").toString()
+
+            when (type) {
+                "hot" -> TYPE = "points"
+                "new" -> TYPE = "createdAt"
+            }
+        }
+
         createListView()
     }
 
@@ -66,16 +75,15 @@ class HomeFragment : Fragment() {
 
         // Access a Cloud Firestore instance from your Activity
         val db = FirebaseFirestore.getInstance()
-
         db.collection("posts")
-            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .orderBy(TYPE, Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
+                    // Log.d(TAG, "${document.id} => ${document.data}")
                     postTitleList.add(document.data["data"].toString())
                     // postPointsList.add(document.data["points"].toString())
-                    postPointsList.add("22")
+                    postPointsList.add(document.data["points"].toString())
                     postIdList.add(document.id)
                 }
 

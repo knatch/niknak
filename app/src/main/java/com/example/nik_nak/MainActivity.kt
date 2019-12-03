@@ -26,21 +26,22 @@ class MainActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        val data = Bundle()
         when (item.itemId) {
             R.id.navigation_home -> {
-                loadFragment(HomeFragment())
+                loadFragment(HomeFragment(), data)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_peak -> {
-                loadFragment(PeakFragment())
+                loadFragment(PeakFragment(), data)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_me -> {
-                loadFragment(MeFragment())
+                loadFragment(MeFragment(), data)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_more -> {
-                loadFragment(MoreFragment())
+                loadFragment(MoreFragment(), data)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -74,8 +75,10 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
+        val data = Bundle()
+        data.putString("type", "new")
         // initialize the page with home fragment
-        loadFragment(HomeFragment())
+        loadFragment(HomeFragment(), data)
 
         checkLocationPermission()
     }
@@ -117,7 +120,24 @@ class MainActivity : AppCompatActivity() {
             startActivity(userPointIntent)
             true
         }
+        R.id.action_hot -> {
+            Log.i(TAG, "action_hot")
+            val data = Bundle()
+            data.putString("type", "hot")
+            // initialize the page with home fragment
+            loadFragment(HomeFragment(), data)
 
+            true
+        }
+        R.id.action_new -> {
+            Log.i(TAG, "action_new")
+            val data = Bundle()
+            data.putString("type", "new")
+            // initialize the page with home fragment
+            loadFragment(HomeFragment(), data)
+
+            true
+        }
         else -> {
             // If we got here, the user's action was not recognized.
             // Invoke the superclass to handle it.
@@ -125,8 +145,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadFragment (fragment: Fragment) {
+    private fun loadFragment (fragment: Fragment, bundle: Bundle) {
 
+        fragment.arguments = bundle
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, fragment)
         fragmentTransaction.commit()

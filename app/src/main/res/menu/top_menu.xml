@@ -14,10 +14,10 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/action_profile"
+        android:id="@+id/action_hot"
         android:title="Hot" />
     <item
-        android:id="@+id/action_setting"
+        android:id="@+id/action_new"
         android:title="New" />
 
 </menu>
