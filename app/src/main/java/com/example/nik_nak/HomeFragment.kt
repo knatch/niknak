@@ -13,6 +13,7 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -51,8 +52,8 @@ class HomeFragment : Fragment() {
         refreshLayout.setOnRefreshListener{
             Log.d(TAG,"Refreshing")
 
-            val listView = context.findViewById<ListView>(R.id.post_list_view)
-            listView.invalidateViews()
+            // val listView = context.findViewById<ListView>(R.id.post_list_view)
+            // listView.invalidateViews()
 
             refreshLayout.isRefreshing = false
         }
@@ -66,6 +67,11 @@ class HomeFragment : Fragment() {
                 "hot" -> TYPE = "points"
                 "new" -> TYPE = "createdAt"
             }
+        }
+        val fab: View = context.findViewById(R.id.tag_button)
+        fab.setOnClickListener { view ->
+            val newIntent = Intent(context, TagActivity::class.java)
+            context.startActivity(newIntent)
         }
 
         createListView()

@@ -39,4 +39,8 @@
     <string name="like_button_desc">Like button</string>
     <string name="dislike_button_desc">Dislike Button</string>
     <string name="new_reply_delete">Delete</string>
+
+    <string name="search_tag">Search tag</string>
+    <string name="tag_menu">Search</string>
+    <string name="tag_menu_clear">Clear</string>
 </resources>
