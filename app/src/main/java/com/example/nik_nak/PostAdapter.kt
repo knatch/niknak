@@ -48,7 +48,7 @@ class PostAdapter (private val context: Activity,
         likeBtn.setOnClickListener {
             val point = points[position]?.toInt()
 
-            Toast.makeText(context, "Liked me id: $id $point", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Liked successfully", Toast.LENGTH_SHORT).show()
 
             postRef
                 .update("points", point?.plus(1))
@@ -64,7 +64,7 @@ class PostAdapter (private val context: Activity,
         disLikeBtn.setOnClickListener {
             val point = points[position]?.toInt()
 
-            Toast.makeText(context, "Disliked me id: ${postId[position]}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Disliked successfully", Toast.LENGTH_SHORT).show()
 
             postRef
                 .update("points", point?.minus(1))
