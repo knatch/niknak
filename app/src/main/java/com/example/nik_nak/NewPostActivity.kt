@@ -15,12 +15,12 @@ import com.google.android.gms.location.LocationServices
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
-import kotlin.system.exitProcess
 
 
 class NewPostActivity : AppCompatActivity() {
 
     private val TAG = "New Post"
+    private val words = listOf("bitch", "nigger", "nigga", "asshole", "fuck", "motherfucker", "doochbag", "idiot", "dick", "gay", "faggot", "handjob", "f**k", "bastard")
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -71,87 +71,94 @@ class NewPostActivity : AppCompatActivity() {
                 val myToast = Toast.makeText(this, "Post content cannot be empty!", Toast.LENGTH_SHORT)
                 myToast.show()
             } else {
-                // display posting status
-                val myToast = Toast.makeText(this, "Sending...", Toast.LENGTH_SHORT)
-                myToast.show()
+                var isClean = true
+                var exists: Boolean
 
-                val currentTime = Timestamp.now()
+                for (word in words) {
+                    val editTextLower = editText.toLowerCase()
 
-                val sharedPref =
-                    getSharedPreferences(getString(R.string.user_id_key), Context.MODE_PRIVATE)
-                val userId = sharedPref.getString(getString(R.string.user_id_key), "")
+                    exists = editTextLower.contains(word)
+                    // Log.d(TAG, "word: $word, clean: $exists")
+                    if (exists) isClean = false
+                }
 
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location: Location? ->
-                        // Got last known location. In some rare situations this can be null.
-                        val postLocation = GeoPoint(location!!.latitude, location.longitude)
+                if (!isClean) {
+                    val myToast = Toast.makeText(this, "You are posting inappropriate message.", Toast.LENGTH_SHORT)
+                    myToast.show()
+                } else {
+                    // display posting status
+                    val myToast = Toast.makeText(this, "Sending...", Toast.LENGTH_SHORT)
+                    myToast.show()
 
-                        val newPost = hashMapOf(
-                            "data" to editText,
-                            "createdAt" to currentTime,
-                            "location" to postLocation,
-                            "points" to 0,
-                            "userId" to userId
-                        )
-                        // Access a Cloud Firestore instance from your Activity
-                        val db = FirebaseFirestore.getInstance()
+                    val currentTime = Timestamp.now()
 
-                        db.collection("posts")
-                            .add(newPost)
-                            .addOnSuccessListener { documentReference ->
-                                Log.d(
-                                    TAG,
-                                    "DocumentSnapshot written with ID: ${documentReference.id}"
-                                )
+                    val sharedPref =
+                        getSharedPreferences(getString(R.string.user_id_key), Context.MODE_PRIVATE)
+                    val userId = sharedPref.getString(getString(R.string.user_id_key), "")
 
-                                if (userId != null) {
+                    fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location: Location? ->
+                            // Got last known location. In some rare situations this can be null.
+                            val postLocation = GeoPoint(location!!.latitude, location.longitude)
 
-                                    val userRef = db.collection("users").document(userId)
+                            val newPost = hashMapOf(
+                                "data" to editText,
+                                "createdAt" to currentTime,
+                                "location" to postLocation,
+                                "points" to 0,
+                                "userId" to userId
+                            )
+                            // Access a Cloud Firestore instance from your Activity
+                            val db = FirebaseFirestore.getInstance()
 
-                                    val sharedPref = getSharedPreferences(
-                                        getString(R.string.user_points_key),
-                                        Context.MODE_PRIVATE
+                            db.collection("posts")
+                                .add(newPost)
+                                .addOnSuccessListener { documentReference ->
+                                    Log.d(
+                                        TAG,
+                                        "DocumentSnapshot written with ID: ${documentReference.id}"
                                     )
-                                    val userPoints = sharedPref.getString(
-                                        getString(R.string.user_points_key),
-                                        "0"
-                                    )
 
-                                    var points = userPoints.toString().toInt()
+                                    if (userId != null) {
 
-                                    if (userPoints!!.isEmpty()) {
-                                        points = 150
-                                    } else {
-                                        points += 5
+                                        val userRef = db.collection("users").document(userId)
+                                        val sharedPref = getSharedPreferences(
+                                            getString(R.string.user_points_key),
+                                            Context.MODE_PRIVATE
+                                        )
+                                        val userPoints = sharedPref.getString(
+                                            getString(R.string.user_points_key),
+                                            "0"
+                                        )
+
+                                        var points = userPoints.toString().toInt()
+
+                                        if (userPoints!!.isEmpty()) {
+                                            points = 150
+                                        } else {
+                                            points += 5
+                                        }
+                                        userRef.update("points", points)
+                                            .addOnSuccessListener {
+                                                Log.d(TAG, "User points successfully updated!")
+                                            }
+                                            .addOnFailureListener { e ->
+                                                Log.w(TAG, "Error updating user points", e)
+                                            }
                                     }
-                                    userRef.update("points", points)
-                                        .addOnSuccessListener {
-                                            Log.d(
-                                                TAG,
-                                                "User points successfully updated!"
-                                            )
-                                        }
-                                        .addOnFailureListener { e ->
-                                            Log.w(
-                                                TAG,
-                                                "Error updating user points",
-                                                e
-                                            )
-                                        }
 
+                                    // redirect back to main page
+                                    Handler().postDelayed({
+                                        myToast.cancel()
+                                        finish()
+                                    }, 1000)
                                 }
-
-                                // redirect back to main page
-                                Handler().postDelayed({
+                                .addOnFailureListener { e ->
+                                    Log.w(TAG, "Error adding document", e)
                                     myToast.cancel()
-                                    finish()
-                                }, 1000)
-                            }
-                            .addOnFailureListener { e ->
-                                Log.w(TAG, "Error adding document", e)
-                                myToast.cancel()
-                            }
-                    }
+                                }
+                        }
+                }
             }
 
             true

@@ -28,6 +28,7 @@ class HomeFragment : Fragment() {
     private var postTitleList = ArrayList<String>()
     private var postPointsList = ArrayList<String>()
     private var postIdList = ArrayList<String>()
+    private var postUserIdList = ArrayList<String>()
 
     override fun onActivityCreated (savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -84,6 +85,7 @@ class HomeFragment : Fragment() {
                     postTitleList.add(document.data["data"].toString())
                     postPointsList.add(document.data["points"].toString())
                     postIdList.add(document.id)
+                    postUserIdList.add(document.data["userId"].toString())
                 }
 
                 val postTitle = arrayOfNulls<String>(postTitleList.size)
@@ -95,9 +97,11 @@ class HomeFragment : Fragment() {
                 val postId = arrayOfNulls<String>(postIdList.size)
                 postIdList.toArray(postId)
 
+                val postUserId = arrayOfNulls<String>(postUserIdList.size)
+                postUserIdList.toArray(postUserId)
 
                 val listView = context.findViewById(R.id.post_list_view) as ListView
-                val postAdapter = PostAdapter(context, postTitle, postPoints, postId)
+                val postAdapter = PostAdapter(context, postTitle, postPoints, postId, postUserId)
                 listView.adapter = postAdapter
 
             }

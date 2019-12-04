@@ -1,7 +1,9 @@
 package com.example.nik_nak
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +13,11 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 
-class PostAdapter (private val context: Activity, private val title: Array<String?>, private val points: Array<String?>, private val postId: Array<String?>)
+class PostAdapter (private val context: Activity,
+                   private val title: Array<String?>,
+                   private val points: Array<String?>,
+                   private val postId: Array<String?>,
+                   private val postUserId: Array<String?>)
     : ArrayAdapter<String>(context, R.layout.list_post, title) {
 
     private val TAG = "Post Adapter"
@@ -21,7 +27,7 @@ class PostAdapter (private val context: Activity, private val title: Array<Strin
         val inflater = context.layoutInflater
         val rowView = inflater.inflate(R.layout.list_post, null, true)
 
-        val titleText = rowView.findViewById(R.id.title) as TextView
+        val titleText = rowView.findViewById<TextView>(R.id.title)
         titleText.text = title[position]
         titleText.tag = postId[position]
         titleText.setOnClickListener {
@@ -30,11 +36,11 @@ class PostAdapter (private val context: Activity, private val title: Array<Strin
             context.startActivity(newIntent)
         }
 
-        val pointText = rowView.findViewById(R.id.points) as TextView
+        val pointText = rowView.findViewById<TextView>(R.id.points)
+        pointText.tag = postUserId[position]
         pointText.text = points[position]
 
         val id = postId[position].toString()
-
         val postRef = db.collection("posts").document(id)
 
         val likeBtn = rowView.findViewById<ImageButton>(R.id.button_like)
@@ -69,6 +75,13 @@ class PostAdapter (private val context: Activity, private val title: Array<Strin
                 .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
         }
 
+        val sharedPref = getContext().getSharedPreferences(context.getString(R.string.user_id_key), Context.MODE_PRIVATE)
+        val userId = sharedPref.getString(context.getString(R.string.user_id_key), "")
+
+        if (postUserId[position].equals(userId)) {
+            likeBtn.visibility = View.GONE
+            disLikeBtn.visibility = View.GONE
+        }
         return rowView
     }
 }

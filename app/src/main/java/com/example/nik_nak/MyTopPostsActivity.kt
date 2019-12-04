@@ -1,36 +1,31 @@
 package com.example.nik_nak
 
 import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-class MyPostsActivity : AppCompatActivity() {
+class MyTopPostsActivity : AppCompatActivity() {
 
-    private val TAG = "My Posts Activity"
+    private val TAG = "My Top Post Activity"
 
     private var postTitleList = ArrayList<String>()
     private var postPointsList = ArrayList<String>()
     private var postIdList = ArrayList<String>()
     private var postUserIdList = ArrayList<String>()
-    // private var postList = mutableListOf<PostModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_my_posts)
+        setContentView(R.layout.activity_my_top_posts)
 
         // set up toolbar
         setSupportActionBar(findViewById(R.id.main_toolbar))
 
         // update toolbar title
-        supportActionBar?.title = "My Posts"
+        supportActionBar?.title = "My Top Posts"
 
         // enable home navigation
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -43,7 +38,7 @@ class MyPostsActivity : AppCompatActivity() {
 
         db.collection("posts")
             .whereEqualTo("userId", userId)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .orderBy("points", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { result ->
                 Log.i(TAG, "fetchPosts on success listener")

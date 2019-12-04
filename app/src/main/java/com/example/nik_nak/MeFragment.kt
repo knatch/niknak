@@ -31,34 +31,31 @@ class MeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val context = context as MainActivity
-        val menuList = arrayOf("My posts", "My replies")
+        val menuList = arrayOf("My Top Posts", "My posts", "My replies")
 
         val lv = context.findViewById(R.id.me_list) as ListView
         val adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, menuList)
 
         lv.setOnItemClickListener { parent, view, position, id ->
-            if (position == 0) {
-                // start MyPostsActivity
-                val newIntent = Intent(context, MyPostsActivity::class.java)
-                startActivity(newIntent)
-            } else if (position == 1) {
-                // start MyRepliesActivity
-                val newIntent = Intent(context, MyRepliesActivity::class.java)
-                startActivity(newIntent)
+            when (position) {
+                0 -> {
+                    // start MyPostsActivity
+                    val newIntent = Intent(context, MyTopPostsActivity::class.java)
+                    startActivity(newIntent)
+                }
+                1 -> {
+                    // start MyPostsActivity
+                    val newIntent = Intent(context, MyPostsActivity::class.java)
+                    startActivity(newIntent)
+                }
+                2 -> {
+                    // start MyRepliesActivity
+                    val newIntent = Intent(context, MyRepliesActivity::class.java)
+                    startActivity(newIntent)
+                }
             }
         }
 
         lv.adapter = adapter
     }
-
-    /* override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val context = context as MainActivity
-        val listView = context.findViewById<ListView>(R.id.post_list_view)
-        val menuList = arrayOf("My posts", "My replies")
-
-        val adapter = ArrayAdapter(context,
-            android.R.layout.simple_list_item_1, menuList)
-
-        listView.adapter = adapter
-    } */
 }
