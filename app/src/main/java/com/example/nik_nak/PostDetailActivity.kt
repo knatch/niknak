@@ -1,5 +1,7 @@
 package com.example.nik_nak
 
+import android.content.ClipData
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,9 +9,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -35,9 +37,7 @@ class PostDetailActivity : AppCompatActivity() {
         // enable home navigation
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // val postTitle = intent.getStringExtra("postTitle")
         val postId = intent.getStringExtra("postId")
-
         //
         fetchPost(postId)
         fetchReplies(postId)
@@ -132,6 +132,16 @@ class PostDetailActivity : AppCompatActivity() {
         // reference to res/menu/new_post_menu.xml
         menuInflater.inflate(R.menu.new_reply_menu, menu)
 
+        val deleteButton = menu!!.findItem(R.id.action_delete)
+        deleteButton.isVisible = false
+
+        val postUserId = intent.getStringExtra("postUserId")
+        val sharedPref = getSharedPreferences(getString(R.string.user_id_key), Context.MODE_PRIVATE)
+        val userId = sharedPref.getString(getString(R.string.user_id_key), "")
+
+        if (postUserId == userId) {
+            deleteButton.isVisible = true
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -143,6 +153,10 @@ class PostDetailActivity : AppCompatActivity() {
             val newIntent = Intent(this, NewReplyActivity::class.java)
             newIntent.putExtra("postId", postId)
             startActivityForResult(newIntent, 0)
+            true
+        }
+        R.id.action_delete -> {
+            createAlertDialog()
             true
         }
         else -> {
@@ -157,5 +171,45 @@ class PostDetailActivity : AppCompatActivity() {
 
         finish()
         startActivity(this.intent)
+    }
+
+    private fun createAlertDialog () {
+        val dialogBuilder = AlertDialog.Builder(this)
+
+        // set message of alert dialog
+        dialogBuilder.setMessage("Are you sure you want to delete this post?")
+            // if the dialog is cancelable
+            .setCancelable(false)
+            // positive button text and action
+            .setPositiveButton("Proceed", DialogInterface.OnClickListener {
+                    dialog, id -> deletePost()
+            })
+            // negative button text and action
+            .setNegativeButton("Cancel", DialogInterface.OnClickListener {
+                    dialog, id -> dialog.cancel()
+            })
+
+        // create dialog box
+        val alert = dialogBuilder.create()
+        // set title for alert dialog box
+        alert.setTitle("Delete dialog")
+        // show alert dialog
+        alert.show()
+    }
+
+    private fun deletePost () {
+        val postId = intent.getStringExtra("postId")
+
+        db.collection("posts").document(postId)
+            .delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                val myToast = Toast.makeText(this, "Post deleted successfully", Toast.LENGTH_SHORT)
+                myToast.show()
+
+                finish()
+            }
+            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+        finish()
     }
 }

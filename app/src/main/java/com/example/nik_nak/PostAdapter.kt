@@ -27,18 +27,19 @@ class PostAdapter (private val context: Activity,
         val inflater = context.layoutInflater
         val rowView = inflater.inflate(R.layout.list_post, null, true)
 
+        val pointText = rowView.findViewById<TextView>(R.id.points)
+        pointText.tag = postUserId[position]
+        pointText.text = points[position]
+
         val titleText = rowView.findViewById<TextView>(R.id.title)
         titleText.text = title[position]
         titleText.tag = postId[position]
         titleText.setOnClickListener {
             val newIntent = Intent(context, PostDetailActivity::class.java)
             newIntent.putExtra("postId", postId[position])
+            newIntent.putExtra("postUserId", postUserId[position])
             context.startActivity(newIntent)
         }
-
-        val pointText = rowView.findViewById<TextView>(R.id.points)
-        pointText.tag = postUserId[position]
-        pointText.text = points[position]
 
         val id = postId[position].toString()
         val postRef = db.collection("posts").document(id)
