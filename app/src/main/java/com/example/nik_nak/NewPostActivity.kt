@@ -15,6 +15,7 @@ import android.widget.Toolbar
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
@@ -99,6 +100,21 @@ class NewPostActivity : AppCompatActivity() {
 
                     val currentTime = Timestamp.now()
 
+                    val tag = findViewById<TextInputEditText>(R.id.tag_text)
+                    // get string / remove white space
+                    val tagText = tag.text.toString().toLowerCase().replace("\\s".toRegex(), "")
+
+                    if (tagText.isNotEmpty()) {
+                        val newTag = hashMapOf(
+                            "data" to tagText,
+                            "createdAt" to currentTime
+                        )
+
+                        db.collection("tags").add(newTag)
+                            .addOnSuccessListener { documentReference ->  Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}") }
+                            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+                    }
+
                     val sharedPref = getSharedPreferences(getString(R.string.user_id_key), Context.MODE_PRIVATE)
                     val userId = sharedPref.getString(getString(R.string.user_id_key), "")
 
@@ -112,7 +128,8 @@ class NewPostActivity : AppCompatActivity() {
                                 "createdAt" to currentTime,
                                 "location" to postLocation,
                                 "points" to 0,
-                                "userId" to userId
+                                "userId" to userId,
+                                "tag" to tagText
                             )
 
                             db.collection("posts")
@@ -121,7 +138,6 @@ class NewPostActivity : AppCompatActivity() {
                                     Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
 
                                     if (userId != null) {
-
                                         val userRef = db.collection("users").document(userId)
 
                                         val sharedPref = getSharedPreferences(getString(R.string.user_points_key), Context.MODE_PRIVATE)

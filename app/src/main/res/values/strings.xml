@@ -43,4 +43,5 @@
     <string name="search_tag">Search tag</string>
     <string name="tag_menu">Search</string>
     <string name="tag_menu_clear">Clear</string>
+    <string name="add_tag">Add Tag</string>
 </resources>

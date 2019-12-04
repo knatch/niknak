@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ListView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -95,6 +96,7 @@ class TagActivity : AppCompatActivity() {
         val edit = findViewById<TextInputEditText>(R.id.edit_text)
         // get string / remove white space
         val editText = edit.text.toString().toLowerCase().replace("\\s".toRegex(), "")
+        var size = 0
 
         if (editText.isNotBlank()) {
             db.collection("posts")
@@ -107,10 +109,15 @@ class TagActivity : AppCompatActivity() {
                         postPointsList.add(document.data["points"].toString())
                         postIdList.add(document.id)
                         postUserIdList.add(document.data["userId"].toString())
+                        size++
                     }
-
-                    // construct list
-                    createListView()
+                    if (size < 1) {
+                        val listView = this.findViewById<ListView>(R.id.post_list_view)
+                        listView.isVisible = false
+                    } else {
+                        // construct list
+                        createListView()
+                    }
                 }
                 .addOnFailureListener { exception ->
                     Log.w(TAG, "Error getting documents: ", exception)
@@ -120,6 +127,7 @@ class TagActivity : AppCompatActivity() {
     private fun createListView () {
         Log.i(TAG, "CreateListView function")
         val listView = this.findViewById<ListView>(R.id.post_list_view)
+        listView.isVisible = true
 
         val postTitle = arrayOfNulls<String>(postTitleList.size)
         postTitleList.toArray(postTitle)
