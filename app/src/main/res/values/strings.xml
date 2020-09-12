@@ -44,4 +44,8 @@
     <string name="tag_menu">Search</string>
     <string name="tag_menu_clear">Clear</string>
     <string name="add_tag">Add Tag</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
 </resources>
